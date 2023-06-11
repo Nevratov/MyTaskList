@@ -1,23 +1,8 @@
 import kotlinx.datetime.*
-import java.time.Instant
-import java.time.format.DateTimeParseException
-import kotlin.system.exitProcess
 
 class TaskList(private val tasks: ArrayList<ArrayList<String>> = arrayListOf()) {
 
-    fun action() {
-        while (true) {
-            println("Input an action (add, print, end):")
-            when (readln().lowercase()) {
-                "add" -> addTask()
-                "print" -> printTaskList()
-                "end" -> { print("Tasklist exiting!"); exitProcess(0) }
-                else -> println("The input action is invalid")
-            }
-        }
-    }
-
-    private fun addTask() {
+    fun addTask() {
         val arrayTask = arrayListOf<String>()
         val priority = setPriorityTask()
         val date = setDeadlineTask()
@@ -48,24 +33,13 @@ class TaskList(private val tasks: ArrayList<ArrayList<String>> = arrayListOf()) 
     private fun setDeadlineTask(): String {
         do {
             println("Input the date (yyyy-mm-dd):")
+            val inputDate = readln().trimIndent().split("-")
+            val date: LocalDate
 
-            var finalDate = ""
-            val inputDate = readln().trimIndent()
-
-            val dateList = inputDate.split("-")
-
-            if (dateList.size != 3) {
-                println("The input date is invalid")
-                continue
-            } else {
-                if (dateList[0].length == 4) finalDate += "${dateList[0]}-"
-                finalDate += if (dateList[1].length == 2) "${dateList[1]}-" else "0${dateList[1]}-"
-                finalDate += if (dateList[2].length == 2) dateList[2] else "0${dateList[2]}"
-            }
             try {
-                Instant.parse(finalDate + "T00:00:00Z")
-                return finalDate
-            } catch (e: DateTimeParseException) {
+                date = LocalDate(inputDate[0].toInt(), inputDate[1].toInt(), inputDate[2].toInt())
+                return date.toString()
+            } catch (e: Exception) {
                 println("The input date is invalid")
             }
         } while (true)
@@ -74,30 +48,17 @@ class TaskList(private val tasks: ArrayList<ArrayList<String>> = arrayListOf()) 
     private fun setTimeTask(): String {
         do {
             println("Input the time (hh:mm):")
-
-            var finalTime = ""
-            val inputDate = readln().trimIndent()
-
-            val timeList = inputDate.split(":")
-
-            if (timeList.size != 2) {
-                println("The input time is invalid")
-                continue
-            } else {
-                finalTime += if (timeList[0].length == 2 && timeList[0].toInt() in 0..23) "${timeList[0]}:" else "0${timeList[1]}:"
-                finalTime += if (timeList[1].length == 2 && timeList[1].toInt() in 0..59) timeList[1] else "0${timeList[1]}"
-            }
+            val inputTime = readln().trimIndent().split(":")
+            val time: LocalTime
 
             try {
-                Instant.parse("1999-08-30" + "T${finalTime}:00Z")
-                return finalTime
-            } catch (e: DateTimeParseException) {
-                println("The input time is invalid")
-            }
+                time = LocalTime(inputTime[0].toInt(), inputTime[1].toInt())
+                return time.toString()
+            } catch (e: Exception) { println("The input time is invalid") }
         } while (true)
     }
 
-    private fun printTaskList() {
+    fun printTaskList() {
         if (tasks.isNotEmpty()) {
             for (i in tasks.indices) {
                 if (i <= 8) println("${i + 1}  ${tasks[i][0]}")
