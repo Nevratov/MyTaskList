@@ -67,7 +67,7 @@ class TaskList(private val tasks: ArrayList<ArrayList<String>> = arrayListOf()) 
         else {
             printTaskList()
             do {
-                println("Input the task number (1-${tasks.size})")
+                println("Input the task number (1-${tasks.size}):")
                 try {
                     tasks.removeAt(readln().toInt() - 1)
                     println("The task is deleted")
@@ -82,20 +82,22 @@ class TaskList(private val tasks: ArrayList<ArrayList<String>> = arrayListOf()) 
         else {
             printTaskList()
             do {
-                println("Input the task number (1-${tasks.size})")
+                println("Input the task number (1-${tasks.size}):")
                 try {
                     val numberTask = readln().toInt() - 1
                     tasks[numberTask] // checking the existence of a task
-                    println("Input a field to edit (priority, date, time, task):")
-                    when (readln()) {
-                        "date" -> editInfoLine(numberTask,"date")
-                        "time" -> editInfoLine(numberTask,"time")
-                        "priority" -> editInfoLine(numberTask,"priority")
-                        "task" -> editTask(numberTask)
-                    }
-                    println("The task is changed")
-
-                    return
+                    do {
+                        println("Input a field to edit (priority, date, time, task):")
+                        when (readln()) {
+                            "date" -> editInfoLine(numberTask, "date")
+                            "time" -> editInfoLine(numberTask, "time")
+                            "priority" -> editInfoLine(numberTask, "priority")
+                            "task" -> editTask(numberTask)
+                            else -> { println("Invalid field"); continue }
+                        }
+                        println("The task is changed")
+                        return
+                    } while (true)
                 } catch (e: Exception) { println("Invalid task number") }
             } while (true)
         }
